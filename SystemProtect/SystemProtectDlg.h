@@ -11,7 +11,12 @@
 #include "vector"
 using namespace std;
 
+struct structFileInfo
+{
+	CString m_strFileName;
+	struct _stat64 m_statFileInfo;
 
+};
 // CSystemProtectDlg ¶Ô»°¿ò
 class CSystemProtectDlg : public CDialogEx
 {
@@ -41,15 +46,20 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CString m_srcPath;
-	CString m_dstPath;
 	afx_msg void OnBnClickedBtnSelectsrc();
-	afx_msg void OnBnClickedBtnSelectdst();
 private:
-	CString SelectFolder();
-	std::map<unsigned _int64, struct _stat64>FileInfoLst;
-	void getFileInfo(map<unsigned _int64, struct _stat64> &FileInfoLst, CString & srcPath);
-	unsigned __int64 calculateFile(const char * fileName, struct _stat64 &fileInfo);
-public:
+	CString SelectFolder();	
+	std::map<unsigned int,vector<structFileInfo>>m_FileNameLst;
+	void getFileInfo(map<unsigned int, vector<structFileInfo>> &mapFileNameLst, CString & srcPath);
+	unsigned int calculateHASH(const char * fileName);
+	CString getFileName(CString &filePath);
+	CString getFilePath(CString &filePathName);
+	std::vector<CString>m_strfilePaths;
+	BOOL isHadDuplicateInfo = false;
+	size_t delFileNum = 0;
 	CListCtrl m_lstFileInfo;
 	afx_msg void OnBnClickedBtnFindDuplicate();
+	afx_msg void OnBnClickedBtnDelete();
+public:
+	afx_msg void OnNMDblclkListFileinfo(NMHDR *pNMHDR, LRESULT *pResult);
 };
